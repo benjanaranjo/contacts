@@ -1,0 +1,21 @@
+{
+  "name": "contacts",
+  "version": "1.0.0",
+  "description": "API Contacs",
+  "main": "index.js",
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/benjanaranjo/contacts.git"
+  },
+  "homepage": "https://github.com/benjanaranjo/contacts",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Benjamin",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nedb": "^1.8.0"
+  }
+}
