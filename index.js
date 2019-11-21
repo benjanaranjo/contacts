@@ -22,10 +22,14 @@ console.log("Servidor Listo");
 
 
 //CARGAR LA DEPENDENCIA DE NEDB, Y CREACION DE LA BASE DE DATOS
-var Datastore = require('nedb');
-var database = new Datastore('base.db');
 //CARGA LA BASE DE DATOS EN MEMORIA AL LEVANTAR LA APLICACION
-database.loadDatabase();
+var Datastore = require('nedb');
+var DB_FILE_NAME = __dirname + "/contacts.json"
+var database = new Datastore({
+    filename:DB_FILE_NAME,
+    autoload: true
+});
+
 
 //CARGAR DATOS EN LA BASE DE DATOS COMO PRUEBA PARA QUE NO INICIE VACIA
 //se usa la variable con la instancia del Datastore, llamada database
@@ -47,7 +51,7 @@ database.loadDatabase();
 
 
 //ARREGLO USADO EN CLASE ANTES DE LA CREACION DE LA BASE DE DATOS
-var contacts = [];
+//var contacts = [];
 //{"name":"peter","phone":"123456"},
 //{"name":"jhon","phone":"789456"}
 //];
@@ -94,9 +98,17 @@ var contact = req.body;
 //contacts.push(contact);
 
 //NUEVO INSERT TRABAJANDO CON BASE DE DATOS
-database.insert(contact);
+database.insert(contact, (err) => {
+    if (err) {
+        console.log(Date()+" - "+err);
+        sned.sendStatus(500);
+    }
+    else {
+        res.sendStatus(201);
+    }
+});
 //FIN NUEVO INSERT
-res.sendStatus(201);
+
 });
 /*FIN DE METODO DE INSERT*/
 /*FIN DE METODO DE INSERT*/
