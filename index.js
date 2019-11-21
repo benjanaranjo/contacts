@@ -75,10 +75,16 @@ console.log(Date()+ "- GET /contacts");
 
 //NUEVA RESPUESTA QUE DEVUELVE LA BASE DE DATOS
 //EL FIND VA VACIO PARA QUE DEVUELVA TODOS LOS REGISTROS
-database.find({}, (err,data)=> {
-    res.json(data);
-})
-//FIN DE RESPUESTA
+    database.find({}, (err,data)=> {
+        if(err){
+            res.sendStatus(500);
+        } else {
+         res.send(data);  
+          //  res.json(data); //tambien funciona pero el profe usa res.send    
+        }
+        
+    });
+    //FIN DE RESPUESTA
 
 });
 /*FIN DE METODO DE CONSULTA*/
