@@ -22,10 +22,14 @@ console.log("Servidor Listo");
 
 
 //CARGAR LA DEPENDENCIA DE NEDB, Y CREACION DE LA BASE DE DATOS
-var Datastore = require('nedb');
-var database = new Datastore('base.db');
 //CARGA LA BASE DE DATOS EN MEMORIA AL LEVANTAR LA APLICACION
-database.loadDatabase();
+var Datastore = require('nedb');
+var DB_FILE_NAME = __dirname + "/contacts.json"
+var database = new Datastore({
+    filename:DB_FILE_NAME,
+    autoload: true
+});
+
 
 //CARGAR DATOS EN LA BASE DE DATOS COMO PRUEBA PARA QUE NO INICIE VACIA
 //se usa la variable con la instancia del Datastore, llamada database
@@ -47,7 +51,7 @@ database.loadDatabase();
 
 
 //ARREGLO USADO EN CLASE ANTES DE LA CREACION DE LA BASE DE DATOS
-var contacts = [];
+//var contacts = [];
 //{"name":"peter","phone":"123456"},
 //{"name":"jhon","phone":"789456"}
 //];
@@ -71,10 +75,21 @@ console.log(Date()+ "- GET /contacts");
 
 //NUEVA RESPUESTA QUE DEVUELVE LA BASE DE DATOS
 //EL FIND VA VACIO PARA QUE DEVUELVA TODOS LOS REGISTROS
-database.find({}, (err,data)=> {
-    res.json(data);
-})
-//FIN DE RESPUESTA
+    database.find({}, (err,data)=> {
+        if(err){
+            console.log(Date()+" - " + err);
+            res.sendStatus(500);
+        } else {
+        //para no pasar el ID de los contactos, vamos a mapear la respuesta usando el metodo map, el cual genera una lista nueva con el dato del id eliminado, esa lista temporal es la que se envia en el res.send
+         res.send(data.map((contact) => {
+            delete contact._id;
+            return contact;
+         }));  
+          //  res.json(data); //tambien funciona pero el profe usa res.send    
+        }
+        
+    });
+    //FIN DE RESPUESTA
 
 });
 /*FIN DE METODO DE CONSULTA*/
@@ -94,9 +109,17 @@ var contact = req.body;
 //contacts.push(contact);
 
 //NUEVO INSERT TRABAJANDO CON BASE DE DATOS
-database.insert(contact);
+database.insert(contact, (err) => {
+    if (err) {
+        console.log(Date()+" - "+err);
+        sned.sendStatus(500);
+    }
+    else {
+        res.sendStatus(201);
+    }
+});
 //FIN NUEVO INSERT
-res.sendStatus(201);
+
 });
 /*FIN DE METODO DE INSERT*/
 /*FIN DE METODO DE INSERT*/
