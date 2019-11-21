@@ -77,9 +77,14 @@ console.log(Date()+ "- GET /contacts");
 //EL FIND VA VACIO PARA QUE DEVUELVA TODOS LOS REGISTROS
     database.find({}, (err,data)=> {
         if(err){
+            console.log(Date()+" - " + err);
             res.sendStatus(500);
         } else {
-         res.send(data);  
+        //para no pasar el ID de los contactos, vamos a mapear la respuesta usando el metodo map, el cual genera una lista nueva con el dato del id eliminado, esa lista temporal es la que se envia en el res.send
+         res.send(data.map((contact) => {
+            delete contact._id;
+            return contact;
+         }));  
           //  res.json(data); //tambien funciona pero el profe usa res.send    
         }
         
